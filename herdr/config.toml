@@ -1,0 +1,52 @@
+onboarding = false
+
+[theme]
+name = "solarized"
+
+[terminal]
+default_shell = "/bin/zsh"
+shell_mode = "login"
+new_cwd = "follow"
+
+[worktrees]
+directory = "~/workspace/herdr-worktrees"
+
+[keys]
+prefix = "ctrl+b"
+workspace_picker = "prefix+w"
+new_workspace = "prefix+shift+n"
+switch_workspace = "prefix+shift+1..9"
+focus_agent = "prefix+alt+1..9"
+new_tab = "prefix+c"
+switch_tab = "prefix+1..9"
+split_vertical = "prefix+v"
+split_horizontal = "prefix+minus"
+focus_pane_left = "prefix+h"
+focus_pane_down = "prefix+j"
+focus_pane_up = "prefix+k"
+focus_pane_right = "prefix+l"
+detach = "prefix+q"
+
+[ui]
+sidebar_width = 30
+sidebar_min_width = 22
+sidebar_max_width = 42
+sidebar_start_collapsed = false
+sidebar_collapsed_mode = "compact"
+mouse_capture = true
+copy_on_select = true
+confirm_close = true
+prompt_new_tab_name = true
+prompt_new_workspace_name = true
+pane_borders = true
+pane_scrollbars = true
+pane_gaps = true
+show_agent_labels_on_pane_borders = true
+hide_tab_bar_when_single_tab = false
+tab_bar_position = "top"
+agent_panel_sort = "spaces"
+accent = "#2aa198"
+
+[ui.toast]
+delivery = "system"
+delay_seconds = 1
