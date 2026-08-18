@@ -1,0 +1,26 @@
+[core]
+  editor = nvim
+  autocrlf = input
+
+[init]
+  defaultBranch = main
+
+[pull]
+  rebase = false
+
+[push]
+  autoSetupRemote = true
+
+[fetch]
+  prune = true
+
+[rerere]
+  enabled = true
+
+[alias]
+  s = status --short
+  st = status
+  co = checkout
+  br = branch
+  ci = commit
+  lg = log --oneline --graph --decorate

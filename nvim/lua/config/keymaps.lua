@@ -11,6 +11,9 @@ map("n", "<C-l>", "<C-w>l", { desc = "Window right" })
 
 map("n", "<leader>w", "<cmd>write<CR>", { desc = "Save file" })
 map("n", "<leader>q", "<cmd>quit<CR>", { desc = "Quit" })
+map("n", "<leader>fp", function()
+  print(vim.fn.expand "%:p")
+end, { desc = "Show current file path" })
 
 map("n", "[d", function()
   vim.diagnostic.jump { count = -1, float = true }

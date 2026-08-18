@@ -1,15 +1,15 @@
 onboarding = false
 
 [theme]
-name = "solarized"
+name = "catppuccin"
 
 [terminal]
-default_shell = "/bin/zsh"
-shell_mode = "login"
+default_shell = ""
+shell_mode = "auto"
 new_cwd = "follow"
 
 [worktrees]
-directory = "~/workspace/herdr-worktrees"
+directory = "~/.herdr/worktrees"
 
 [keys]
 prefix = "ctrl+b"
@@ -19,6 +19,8 @@ switch_workspace = "prefix+shift+1..9"
 focus_agent = "prefix+alt+1..9"
 new_tab = "prefix+c"
 switch_tab = "prefix+1..9"
+previous_tab = "f1"
+next_tab = "f2"
 split_vertical = "prefix+v"
 split_horizontal = "prefix+minus"
 focus_pane_left = "prefix+h"
@@ -45,7 +47,7 @@ show_agent_labels_on_pane_borders = true
 hide_tab_bar_when_single_tab = false
 tab_bar_position = "top"
 agent_panel_sort = "spaces"
-accent = "#2aa198"
+accent = "#f5c2e7"
 
 [ui.toast]
 delivery = "system"

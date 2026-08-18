@@ -1,0 +1,14 @@
+export EDITOR="nvim"
+export VISUAL="nvim"
+export PAGER="less"
+
+export PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+
+alias v="nvim"
+alias ll="ls -lah"
+alias gs="git status --short"
+alias gl="git log --oneline --graph --decorate"
+alias h="herdr"
+
+autoload -Uz compinit
+compinit

@@ -27,4 +27,17 @@ link() {
 echo "dotfiles: $ROOT"
 link "$ROOT/nvim" "$HOME/.config/nvim"
 link "$ROOT/wezterm/wezterm.lua" "$HOME/.wezterm.lua"
+link "$ROOT/herdr/config.toml" "$HOME/.config/herdr/config.toml"
+link "$ROOT/git/gitconfig" "$HOME/.gitconfig"
+link "$ROOT/zsh/zshrc" "$HOME/.zshrc"
+
+HERDR_BIN="$(command -v herdr || true)"
+if [ -n "$HERDR_BIN" ]; then
+  "$HERDR_BIN" integration install codex || true
+  "$HERDR_BIN" integration install kimi || true
+  "$HERDR_BIN" integration install grok || true
+else
+  echo "skip  herdr integrations because herdr is not on PATH"
+fi
+
 echo "done"

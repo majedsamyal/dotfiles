@@ -7,11 +7,33 @@ return {
       {
         "mason-org/mason-lspconfig.nvim",
         opts = {
-          ensure_installed = { "lua_ls" },
+          ensure_installed = {
+            "bashls",
+            "dockerls",
+            "gopls",
+            "jsonls",
+            "lua_ls",
+            "pyright",
+            "rust_analyzer",
+            "terraformls",
+            "ts_ls",
+            "yamlls",
+          },
         },
       },
+      "saghen/blink.cmp",
     },
     config = function()
+      local mason_bin = vim.fn.stdpath "data" .. "/mason/bin"
+      local ok_blink, blink = pcall(require, "blink.cmp")
+      if ok_blink then
+        vim.lsp.config("*", { capabilities = blink.get_lsp_capabilities() })
+      end
+
+      vim.lsp.config("pyright", {
+        cmd = { mason_bin .. "/pyright-langserver", "--stdio" },
+      })
+
       vim.lsp.config("lua_ls", {
         settings = {
           Lua = {
@@ -21,7 +43,18 @@ return {
           },
         },
       })
-      vim.lsp.enable "lua_ls"
+      vim.lsp.enable {
+        "bashls",
+        "dockerls",
+        "gopls",
+        "jsonls",
+        "lua_ls",
+        "pyright",
+        "rust_analyzer",
+        "terraformls",
+        "ts_ls",
+        "yamlls",
+      }
 
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("DotfilesLsp", { clear = true }),

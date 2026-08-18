@@ -1,3 +1,10 @@
+-- Mason installs language servers here. Neovim's pyright config looks
+-- for `pyright-langserver` on PATH, so this must be set before LSP starts.
+local mason_bin = vim.fn.stdpath "data" .. "/mason/bin"
+if vim.env.PATH:find(mason_bin, 1, true) ~= 1 then
+  vim.env.PATH = mason_bin .. ":" .. vim.env.PATH
+end
+
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.signcolumn = "yes"
