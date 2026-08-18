@@ -88,6 +88,33 @@ return {
     opts = {
       formatters_by_ft = {
         lua = { "stylua" },
+        go = { "gofumpt" },
+        python = { "ruff_format" },
+        rust = { "rustfmt" },
+        javascript = { "prettier" },
+        javascriptreact = { "prettier" },
+        typescript = { "prettier" },
+        typescriptreact = { "prettier" },
+        json = { "prettier" },
+        yaml = { "prettier" },
+        markdown = { "prettier" },
+        terraform = { "terraform_fmt" },
+      },
+    },
+  },
+
+  -- Formatters and other non-LSP tools, installed automatically.
+  -- rustfmt comes with rustup, terraform_fmt with terraform, so they
+  -- are not in this list.
+  {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    dependencies = { "mason-org/mason.nvim" },
+    opts = {
+      ensure_installed = {
+        "stylua",
+        "gofumpt",
+        "ruff",
+        "prettier",
       },
     },
   },

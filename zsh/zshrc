@@ -4,11 +4,53 @@ export PAGER="less"
 
 export PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 
+# history - keep a lot, share it across windows, skip dupes
+HISTSIZE=100000
+SAVEHIST=100000
+HISTFILE="$HOME/.zsh_history"
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+
 alias v="nvim"
-alias ll="ls -lah"
 alias gs="git status --short"
 alias gl="git log --oneline --graph --decorate"
 alias h="herdr"
 
+# eza if installed, plain ls otherwise
+if command -v eza >/dev/null 2>&1; then
+  alias ll="eza -lah --git"
+else
+  alias ll="ls -lah"
+fi
+
 autoload -Uz compinit
 compinit
+
+# Homebrew paths differ between Apple Silicon and Intel.
+if command -v brew >/dev/null 2>&1; then
+  BREW_PREFIX="$(brew --prefix)"
+
+  if [ -f "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+    source "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+  fi
+
+  if [ -f "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+    source "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+  fi
+
+  unset BREW_PREFIX
+fi
+
+# Ctrl-R fuzzy history, Ctrl-T fuzzy file pick
+if command -v fzf >/dev/null 2>&1; then
+  eval "$(fzf --zsh)"
+fi
+
+# smarter cd: `z projects` jumps to frequent dirs
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+fi
+
+# machine-specific extras (Java, .NET, work stuff) live here, not in the repo
+[ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
