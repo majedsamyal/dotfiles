@@ -2,6 +2,10 @@
 
 My setup for Neovim WezTerm Herdr Git and Zsh.
 
+This repo does not install apps.
+Install the tools first.
+Then use this repo for config files.
+
 ## need
 
 Neovim 0.12 or newer
