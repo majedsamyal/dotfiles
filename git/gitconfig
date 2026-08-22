@@ -25,3 +25,6 @@
   br = branch
   ci = commit
   lg = log --oneline --graph --decorate
+
+[include]
+  path = ~/.gitconfig.local

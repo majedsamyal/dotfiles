@@ -20,7 +20,8 @@ return {
           indent_blankline = {
             enabled = true,
           },
-          leap = true,
+          flash = true,
+          fzf = true,
           lsp_trouble = true,
           lualine = {
             enabled = true,

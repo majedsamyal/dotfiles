@@ -1,3 +1,15 @@
+local rg_excludes = table.concat({
+  [[-g "!.git"]],
+  [[-g "!.jj"]],
+  [[-g "!**/bin/**"]],
+  [[-g "!**/env/**"]],
+  [[-g "!**/venv/**"]],
+  [[-g "!**/.venv/**"]],
+  [[-g "!**/.env"]],
+  [[-g "!**/.env.*"]],
+  [[-g "!**/*.env"]],
+}, " ")
+
 return {
   {
     "nvim-treesitter/nvim-treesitter",
@@ -33,43 +45,44 @@ return {
   },
 
   {
-    "camspiers/snap",
-    event = "VeryLazy",
-    config = function()
-      local snap = require "snap"
-      -- File search is Snap (not Telescope). Skip build/venv dirs and env files.
-      local rg_ignore = {
-        "--glob",
-        "!**/bin/**",
-        "--glob",
-        "!**/env/**",
-        "--glob",
-        "!**/venv/**",
-        "--glob",
-        "!**/.venv/**",
-        "--glob",
-        "!**/.env",
-        "--glob",
-        "!**/.env.*",
-        "--glob",
-        "!**/*.env",
-      }
-
-      snap.maps {
-        {
-          "<Leader>ff",
-          snap.config.file { producer = "ripgrep.file", args = rg_ignore },
-          { command = "files" },
+    "ibhagwan/fzf-lua",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    cmd = "FzfLua",
+    keys = {
+      { "<leader>ff", "<cmd>FzfLua files<cr>", desc = "Find files" },
+      { "<leader>fg", "<cmd>FzfLua live_grep<cr>", desc = "Live grep" },
+      { "<leader>fb", "<cmd>FzfLua buffers<cr>", desc = "Buffers" },
+      { "<leader>fo", "<cmd>FzfLua oldfiles<cr>", desc = "Recent files" },
+    },
+    opts = {
+      keymap = {
+        fzf = {
+          true,
+          ["up"] = "up",
+          ["down"] = "down",
+          ["ctrl-k"] = "up",
+          ["ctrl-j"] = "down",
+          ["ctrl-p"] = "up",
+          ["ctrl-n"] = "down",
         },
-        {
-          "<Leader>fg",
-          snap.config.vimgrep { args = rg_ignore },
-          { command = "grep" },
-        },
-        { "<Leader>fb", snap.config.file { producer = "vim.buffer" }, { command = "buffers" } },
-        { "<Leader>fo", snap.config.file { producer = "vim.oldfile" }, { command = "oldfiles" } },
-      }
-    end,
+      },
+      fzf_opts = {
+        ["--cycle"] = true,
+        ["--pointer"] = ">",
+      },
+      files = {
+        cmd = "rg --color=never --files " .. rg_excludes,
+      },
+      grep = {
+        rg_opts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 "
+          .. rg_excludes
+          .. " -e",
+      },
+      buffers = {
+        -- fzf-lua otherwise pins the current buffer as an unselectable header.
+        fzf_opts = { ["--header-lines"] = false },
+      },
+    },
   },
 
   {
@@ -126,15 +139,28 @@ return {
     },
   },
 
-  -- s / S jump-search (Leap; the Sneak-style keys people remember).
+  -- Dim the buffer and label matching text or syntax nodes for direct jumps.
   {
-    url = "https://codeberg.org/andyg/leap.nvim",
-    name = "leap.nvim",
-    keys = { "s", "S", "gs" },
-    config = function()
-      vim.keymap.set({ "n", "x", "o" }, "s", "<Plug>(leap-forward)", { desc = "Leap forward" })
-      vim.keymap.set({ "n", "x", "o" }, "S", "<Plug>(leap-backward)", { desc = "Leap backward" })
-      vim.keymap.set("n", "gs", "<Plug>(leap-from-window)", { desc = "Leap other window" })
-    end,
+    "folke/flash.nvim",
+    event = "VeryLazy",
+    opts = {},
+    keys = {
+      {
+        "s",
+        mode = { "n", "x", "o" },
+        function()
+          require("flash").jump()
+        end,
+        desc = "Flash jump",
+      },
+      {
+        "S",
+        mode = { "n", "x", "o" },
+        function()
+          require("flash").treesitter()
+        end,
+        desc = "Flash Treesitter",
+      },
+    },
   },
 }

@@ -17,7 +17,14 @@ return {
     opts = {
       keymap = { preset = "enter" },
       appearance = { nerd_font_variant = "mono" },
-      completion = { documentation = { auto_show = true } },
+      completion = {
+        list = { max_items = 50 },
+        menu = {
+          auto_show_delay_ms = 100,
+          max_height = 8,
+        },
+        documentation = { auto_show = false },
+      },
       sources = { default = { "lsp", "path", "buffer" } },
     },
   },
@@ -70,6 +77,13 @@ return {
       "MunifTanjim/nui.nvim",
     },
     opts = {
+      lsp = {
+        progress = { enabled = false },
+        signature = {
+          enabled = true,
+          auto_open = { enabled = false },
+        },
+      },
       cmdline = {
         enabled = true,
         view = "cmdline_popup",

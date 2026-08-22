@@ -1,34 +1,92 @@
 # dotfiles
 
-My Mac setup: Neovim, WezTerm, Herdr, Git, and Zsh.
-Everything is symlinked from this repo, so edits here apply everywhere.
+A complete macOS and desktop Linux workstation: WezTerm, Herdr, Neovim, Git,
+Zsh, language tooling, fonts, and supporting command-line utilities.
 
-## Setting up a new machine
+## Install
 
-Clone the repo and run the installer:
-
-```bash
-git clone https://github.com/majedsamyal/dotfiles ~/dotfiles
-cd ~/dotfiles
-./install.sh --brew
-```
-
-`--brew` runs `brew bundle` and installs every tool the setup needs
-(WezTerm, Neovim, fonts, fzf, zoxide, lazygit, and friends).
-If you already have the tools, plain `./install.sh` just links the configs.
-
-Then open Neovim once — the first start downloads all plugins:
+Run one command on a new machine:
 
 ```bash
-nvim
+git clone https://github.com/majedsamyal/dotfiles ~/dotfiles && ~/dotfiles/install.sh
 ```
 
-Run `./check.sh` afterwards. It verifies the symlinks and tells you
-if anything is missing.
+The installer detects the operating system and manages the rest. It only asks
+for:
 
-## What goes where
+- Git name and email, stored privately in `~/.gitconfig.local`
+- One confirmation before backing up conflicting configuration files
+- A password when the operating system requires `sudo`
 
-| File in repo           | Linked to                       |
+When it finishes, restart the terminal and run `herdr` or `nvim`.
+
+## Options
+
+No options are needed for normal use.
+
+```text
+--git-name NAME       Supply the Git name without a prompt
+--git-email EMAIL     Supply the Git email without a prompt
+--force               Back up and replace conflicting configs
+--non-interactive     Disable prompts for automated installs
+--no-shell-change     Keep the current login shell
+--links-only          Link configs without installing anything
+```
+
+An unattended setup looks like this:
+
+```bash
+~/dotfiles/install.sh \
+  --non-interactive \
+  --force \
+  --git-name "Your Name" \
+  --git-email "you@example.com"
+```
+
+`DOTFILES_GIT_NAME` and `DOTFILES_GIT_EMAIL` can be used instead of the two Git
+arguments.
+
+## Managed internally
+
+The installer:
+
+1. Detects macOS or Linux.
+2. On Linux, installs missing host prerequisites with `apt`, `dnf`, or
+   `pacman`.
+3. Installs Homebrew when needed and applies the cross-platform `Brewfile`.
+4. Installs WezTerm and Hack Nerd Font Mono for the detected platform.
+5. Installs Wayland and X11 clipboard support on Linux.
+6. Backs up conflicting configs and creates all symlinks.
+7. Stores machine-specific Git identity outside the repository.
+8. Makes Zsh the login shell unless disabled.
+9. Configures the Codex, Kimi, and Grok Herdr integrations.
+10. Installs Neovim plugins, language servers, and formatters.
+11. Runs `./check.sh` and stops if the workstation is incomplete.
+
+Homebrew provides consistent current tool versions on both operating systems.
+Linux WezTerm comes from its official Linuxbrew tap. The supported Linux
+package managers are `apt`, `dnf`, and `pacman`; another distribution can use
+the same installer after providing Homebrew's base prerequisites.
+
+## Platform behavior
+
+The same WezTerm actions use native modifiers:
+
+| Action           | macOS               | Linux                  |
+| ---------------- | ------------------- | ---------------------- |
+| Commands         | `Cmd`               | `Ctrl+Shift`           |
+| Focus pane       | `Cmd+Shift+H/J/K/L` | `Alt+Shift+H/J/K/L`    |
+| Select tab       | `Cmd+1..9`          | `Alt+1..9`             |
+| Word movement    | `Option+Arrow`      | `Alt+Arrow`            |
+| Open link        | `Cmd+Click`         | `Ctrl+Click`           |
+
+Linux automatically selects Wayland when available and X11 otherwise. Zsh
+loads Homebrew from the standard Apple Silicon, Intel Mac, or Linux prefix and
+also recognizes common distribution plugin paths.
+
+## Configuration links
+
+| Repository path        | Installed path                  |
 | ---------------------- | ------------------------------- |
 | `nvim/`                | `~/.config/nvim`                |
 | `wezterm/wezterm.lua`  | `~/.wezterm.lua`                |
@@ -37,59 +95,14 @@ if anything is missing.
 | `git/gitignore_global` | `~/.gitignore_global`           |
 | `zsh/zshrc`            | `~/.zshrc`                      |
 
-## Existing files
+Machine-specific shell additions belong in `~/.zshrc.local`. Existing files
+replaced with `--force` receive distinct `.bak`, `.bak.1`, and later names.
 
-The installer never overwrites your files. If something already exists
-it skips it and tells you. To replace it anyway, run:
-
-```bash
-./install.sh --force
-```
-
-Your old file is kept as a `.bak`, so nothing is lost.
-
-## Git identity per machine
-
-The shared `gitconfig` deliberately has no name or email. Set your
-identity per machine or per directory instead:
+## Maintenance
 
 ```bash
-git config --global user.name "Your Name"
-git config --global user.email "you@personal.com"
+brew update && brew upgrade
 ```
 
-If you keep work and personal code in separate folders, let Git pick
-the right identity automatically:
-
-```gitconfig
-# in ~/.gitconfig.local (not tracked by this repo)
-[includeIf "gitdir:~/work/"]
-  path = ~/.gitconfig-work
-```
-
-Put `user.email = you@company.com` in `~/.gitconfig-work` and you can
-never commit to a work repo with your personal address.
-
-## Shell notes
-
-The zsh setup expects a few brew-installed plugins, all in the Brewfile:
-
-- `zsh-autosuggestions` — completes from your history as you type
-- `zsh-syntax-highlighting` — commands turn red when they don't exist
-- `fzf` — `Ctrl-R` for fuzzy history, `Ctrl-T` for fuzzy file pick
-- `zoxide` — `z foo` jumps to directories you visit often
-
-If any of them are missing the shell still works, just without that feature.
-
-Machine-specific things (Java paths, work VPN hosts, employer aliases)
-do not belong in this repo. Put them in `~/.zshrc.local` — the zshrc
-sources it automatically if it exists.
-
-The prompt is [Starship](https://starship.rs), initialized from
-`~/.zshrc.local`. Its config lives at `~/.config/starship.toml`.
-
-## Herdr
-
-Herdr is not on Homebrew, so install it separately. Once it's on your
-PATH, `install.sh` wires up its codex, kimi, and grok integrations
-automatically.
+Use `:Lazy sync` for Neovim plugins and `:MasonToolsUpdate` for language tools.
+Run `./check.sh` at any time to verify the complete workstation.
